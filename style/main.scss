@@ -170,11 +170,11 @@ hr {
 }
 
 // Game field mixin used to render CSS at different width
-@mixin game-field {
+@mixin game-field($gridWidth, $gridRow, $gridSpace, $size) {
   .game-container {
     margin-top: $game-container-margin-top;
     position: relative;
-    padding: $grid-spacing;
+    padding: $gridSpace;
 
     cursor: default;
     -webkit-touch-callout: none;
@@ -187,8 +187,8 @@ hr {
 
     background: $game-container-background;
     border-radius: $tile-border-radius * 2;
-    width: $field-width;
-    height: $field-width;
+    width: $gridWidth;
+    height: $gridWidth;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -252,7 +252,7 @@ hr {
   }
 
   .grid-row {
-    margin-bottom: $grid-spacing;
+    margin-bottom: $gridSpace;
     display: flex;
     flex-wrap: wrap;
 
@@ -262,9 +262,9 @@ hr {
   }
 
   .grid-cell {
-    width: $tile-size;
-    height: $tile-size;
-    margin-right: $grid-spacing;
+    width: $size;
+    height: $size;
+    margin-right: $gridSpace;
 
     border-radius: $tile-border-radius;
 
@@ -283,17 +283,17 @@ hr {
   .tile {
     &,
     .tile-inner {
-      width: ceil($tile-size);
-      height: ceil($tile-size);
-      line-height: ceil($tile-size);
+      width: ceil($size);
+      height: ceil($size);
+      line-height: ceil($size);
     }
 
     // Build position classes
-    @for $x from 1 through $grid-row-cells {
-      @for $y from 1 through $grid-row-cells {
+    @for $x from 1 through $gridRow {
+      @for $y from 1 through $gridRow {
         &.tile-position-#{$x}-#{$y} {
-          $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
-          $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
+          $xPos: floor(($size + $gridSpace) * ($x - 1));
+          $yPos: floor(($size + $gridSpace) * ($y - 1));
           @include transform(translate($xPos, $yPos));
         }
       }
@@ -302,7 +302,7 @@ hr {
 }
 
 // End of game-field mixin
-@include game-field;
+@include game-field($field-width, $grid-row-cells, $grid-spacing, $tile-size);
 
 .tile {
   position: absolute; // Makes transforms relative to the top-left corner
@@ -531,7 +531,7 @@ hr {
   }
 
   // Render the game field at the right width
-  @include game-field;
+  @include game-field($field-width, $grid-row-cells, $grid-spacing, $tile-size);
 
   // Rest of the font-size adjustments in the tile class
   .tile .tile-inner {
